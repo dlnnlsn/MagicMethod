@@ -1,0 +1,7 @@
+# Magic Method
+
+Suppose that we have some number of students who each write some subset of a given collection of tests. We wish to use the results that these students obtained on the tests that they wrote in order to obtain an overall ranking of the students. This should take into account that not every student wrote every test, and that the tests are of different difficulties and of different levels of importance. (i.e. We should be able to specify a weighting for each of the tests.)
+
+We attempt to obtain an overall ideal score for each student that is a single number that summarises their performance across the tests. We can then rank the students according to this ideal score. We also wish to algorithmically determine a difficult rating for each test rather than specifying it up front.
+
+The `Magic Method` simultaneously determines a difficulty level for each test, and an ideal score for each student. These statistics have the property that multiplying the difficulty of a test by the ideal score for a student should give one a number that is a reasonable approximation to the actual result obtained by the student on the given test. For details on how this is done, see `algorithm.pdf`. (Or `algorithm.tex` if you like.)
