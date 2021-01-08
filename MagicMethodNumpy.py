@@ -7,8 +7,10 @@ def badness(difficulties, scores, test_weights, actual_scores):
     )
 
 
-def scores_from_difficulties(difficulties, test_weights, actual_scores):
-    pass
+def scores_from_difficulties(difficulties, test_weights, actual_scores, score_mask):
+    numerators = np.nansum(difficulties * test_weights * actual_scores, axis=1)
+    denominators = np.nansum(test_weights * difficulties ** 2 * score_mask, axis=1)
+    return numerators / denominators
 
 
 def difficulties_from_scores(scores, test_weights, actual_scores, score_mask):
