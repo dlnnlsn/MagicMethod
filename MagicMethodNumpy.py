@@ -30,7 +30,7 @@ def calculate_scores_and_difficulties(
     scores = scores_from_difficulties(
         difficulties, test_weights, actual_scores, score_mask
     )
-    previous_badness = badness(difficulties, scores, test_weights)
+    previous_badness = badness(difficulties, scores, test_weights, actual_scores)
     for _ in range(max_iterations):
         difficulties = difficulties_from_scores(
             scores, test_weights, actual_scores, score_mask
