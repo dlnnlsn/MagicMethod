@@ -75,10 +75,10 @@ class MagicMethod:
             test_denominators[test] = denominator
         lambda_coeff = sum(map(lambda x: 1 / x, test_denominators.values()))
         lambda_rhs = 1
-        for test, numerator in test_numerators:
+        for test, numerator in test_numerators.items():
             lambda_rhs -= numerator / test_denominators[test]
         lambda_value = lambda_rhs / lambda_coeff
-        for test, numerator in test_numerators:
+        for test, numerator in test_numerators.items():
             self.test_difficulties[test] = (
                 lambda_value + numerator
             ) / test_denominators[test]
