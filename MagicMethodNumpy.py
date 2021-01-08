@@ -11,9 +11,11 @@ def scores_from_difficulties(difficulties, test_weights, actual_scores):
     pass
 
 
-def difficulties_from_scores(scores, test_weights, actual_scores):
-    denominators = np.nansum(actual_scores ** 2 * test_weights, axis=0)
-    numerators = np.nansum(scores[np.newaxis].T * actual_scores * test_weights, axis=1)
+def difficulties_from_scores(scores, test_weights, actual_scores, score_mask):
+    denominators = np.nansum(
+        scores[np.newaxis].T ** 2 * score_mask * test_weights, axis=0
+    )
+    numerators = np.nansum(scores[np.newaxis].T * actual_scores * test_weights, axis=0)
     lambda_coeff = np.sum(1 / denominators)
     lambda_value = (1 - numerators.dot(denominators)) / lambda_coeff
     return (lambda_value + numerators) / denominators
