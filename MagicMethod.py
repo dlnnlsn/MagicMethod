@@ -40,10 +40,9 @@ class MagicMethod:
     def set_initial_scores_and_difficulties(self):
         if self.has_all_scores_and_difficulties:
             return
-        for student in self.scores:
-            self.student_scores[student] = 1
         for test in self.tests:
             self.test_difficulties[test] = 1 / len(self.tests)
+        self.update_student_scores_from_difficulties()
         self.has_all_scores_and_difficulties = True
 
     def badness(self):
@@ -92,7 +91,7 @@ class MagicMethod:
                 if score is not None:
                     difficulty = self.test_difficulties[test]
                     numerator += weight * difficulty * score
-                    denominator += weight * difficulty
+                    denominator += weight * difficulty ** 2
             self.student_scores[student] = numerator / denominator if denominator else 1
 
     def calculate_scores_and_difficulties(self):
