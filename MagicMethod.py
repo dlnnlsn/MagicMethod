@@ -25,6 +25,8 @@ class MagicMethod:
     def set_score(self, student_name, test_name, test_score):
         if not student_name in self.scores:
             self.add_student(student_name)
+        if not test_name in self.tests:
+            self.add_test(test_name)
         self.scores[student_name][test_name] = test_score
 
     def set_scores_for_test(self, test_name, scores, test_weight=None):
