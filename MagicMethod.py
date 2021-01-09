@@ -97,8 +97,8 @@ class MagicMethod:
     def calculate_scores_and_difficulties(self):
         previous_badness = self.badness()
         for _ in range(self.max_iterations):
-            self.update_student_scores_from_difficulties()
             self.update_difficulties_from_student_scores()
+            self.update_student_scores_from_difficulties()
             new_badness = self.badness()
             if abs(self.badness() - previous_badness) < self.tolerance:
                 break
