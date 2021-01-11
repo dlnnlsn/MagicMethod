@@ -87,13 +87,37 @@ function scores_from_difficulties(difficulties, actual_scores, test_weights) {
   return scores
 }
 
-function magicmethod(actual_scores, test_weights, tolerance=1e-3) {
+function magicmethod(actual_scores, test_weights, max_scores, tolerance=1e-3) {
+  var students = actual_scores.length
   var tests = actual_scores[0].length
+
+  if (!test_weights || test_weights.length === 0) {
+    test_weights = Array(tests).fill(1)
+  }
+
+  if (Array.isArray(max_scores)) {
+    if (max_scores.length === 1 && Array.isArray(max_scores[0])) {
+      max_scores = max_scores[0]
+    }
+    max_scores = max_scores.map(parseFloat)
+    if (max_scores.length === tests) {
+      for (var i = 0; i < students; ++i) {
+        for (var j = 0; j < tests; ++j) {
+          if (isNumeric(actual_scores[i][j])) {
+            actual_scores[i][j] = parseFloat(actual_scores[i][j]) / max_scores[j]
+          }
+        }
+      }
+    }
+  }
 
   if (test_weights.length === 1 && Array.isArray(test_weights[0])) {
     test_weights = test_weights[0]
   }
   test_weights = test_weights.map(parseFloat)
+  if (test_weights.length < tests) {
+    test_weights = test_weights.concat(Array(tests - test_weights.length).fill(1))
+  }
 
   var difficulties = Array(tests)
   for (var j = 0; j < tests; ++j) {
@@ -113,12 +137,12 @@ function magicmethod(actual_scores, test_weights, tolerance=1e-3) {
   return [scores, difficulties]
 }
 
-function magicscores(actual_scores, test_weights, tolerance=1e-3) {
-  var result = magicmethod(actual_scores, test_weights, tolerance)
+function magicscores(actual_scores, test_weights, max_scores, tolerance=1e-3) {
+  var result = magicmethod(actual_scores, test_weights, max_scores, tolerance)
   return result[0]
 }
 
-function magicdifficulties(actual_scores, test_weights, tolerance=1e-3) {
-  var result = magicmethod(actual_scores, test_weights, tolerance)
+function magicdifficulties(actual_scores, test_weights, max_scores, tolerance=1e-3) {
+  var result = magicmethod(actual_scores, test_weights, max_scores, tolerance)
   return result[1]
 }
