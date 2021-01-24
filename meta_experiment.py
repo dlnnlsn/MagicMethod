@@ -47,5 +47,4 @@ def exponential_objective_function(actual_scores, test_weights, coefficients):
 def optimize_exponential_prediction_function(num_coefficients, actual_scores, test_weights):
     return scipy.optimize.minimize(partial(exponential_objective_function, actual_scores, test_weights),
     exponential_initial_data(num_coefficients),
-    bounds = [(0, 1)] * num_coefficients,
     constraints=[{"type": "eq", "fun": exponential_contstraint}])
