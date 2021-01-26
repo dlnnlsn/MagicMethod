@@ -4,17 +4,14 @@ import scipy.optimize
 from itertools import chain, starmap
 
 
-def difficulty_fn(ms, bs):
-    def d(x):
-        output = 0
-        bsum = 0
-        for (m, b) in zip(ms, bs):
-            if x <= bsum + b:
-                return output + (x - bsum) * m
-            bsum += b
-            output += m * b
-        return 1
+def difficulty_function(ms, bs):
+    ys = ms * bs
+    ys = ys.cumsum() - ys
+    bs = bs.cumsum() - bs
 
+    def d(s):
+        index = np.searchsorted(bs, s) - 1
+        return (x > 0) * (ys[index] + ms[index] * (s - bs[index]))
     return d
 
 
@@ -22,28 +19,16 @@ def badness_function(actual_scores, test_weights, pts_per_difficulty_fn):
     students = len(actual_scores)
     tests = len(test_weights)
 
-    def badness(all_params):
-        ideal_scores = all_params[:students]
-        ms = [
-            all_params[students + k * pts_per_difficulty_fn * 2:students +
-                       (2 * k + 1) * pts_per_difficulty_fn]
-            for k in range(tests)
-        ]
-        bs = [
-            all_params[students +
-                       (2 * k + 1) * pts_per_difficulty_fn:students +
-                       (2 * k + 2) * pts_per_difficulty_fn]
-            for k in range(tests)
-        ]
-        ds = list(starmap(difficulty_fn, zip(ms, bs)))
+    def badness(allparams):
+        scores = allparams[:students]
+        mss = allparams[students: students +
+                        tests * pts_per_difficulty_fn].reshape(tests, pts_per_difficulty_fn)
+        bss = allparams[students + tests *
+                        pts_per_difficulty_fn:].reshape(tests, pts_per_difficulty_fn)
         total = 0
-        for i in range(students):
-            for j in range(tests):
-                if actual_scores[i][j] is not None and not np.isnan(
-                        actual_scores[i][j]):
-                    total += (
-                        test_weights[j] *
-                        (ds[j](ideal_scores[i]) - actual_scores[i][j])**2)
+        for ms, bs, w, a in zip(mss, bss, test_weights, actual_scores):
+            d = difficulty_function(ms, bs)
+            total += np.nansum(w * (d(scores) - a)**2)
         return total
 
     return badness
