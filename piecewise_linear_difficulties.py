@@ -77,7 +77,8 @@ def bounds(students, tests, pts_per_difficulty_fn):
 
 
 def initial_value(students, tests, pts_per_difficulty_fn):
-    return np.append(np.ones(students) / 2, np.ones(pts_per_difficulty_fn * tests), np.ones(pts_per_difficulty_fn * tests) / pts_per_difficulty_fn)
+    return np.append(np.append(np.ones(students) / 2, np.ones(pts_per_difficulty_fn * tests)),
+                     np.ones(pts_per_difficulty_fn * tests) / pts_per_difficulty_fn)
 
 
 def minimize(actual_scores, test_weights, pts_per_difficulty_fn, **kwargs):
