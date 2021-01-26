@@ -118,7 +118,7 @@ def constraints(students, tests, points_per_difficulty_function):
 
 
 def bounds(students, tests, points_per_difficulty_function):
-    return [(0, None)] * students + list(
+    return [(0, 1)] * students + list(
         chain(
             *(
                 [
