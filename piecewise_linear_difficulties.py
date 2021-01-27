@@ -11,7 +11,7 @@ def difficulty_function(ms, dxs):
 
     def d(s):
         index = np.searchsorted(xs, s) - 1
-        return (s > 0) * (ys[index] + ms[index] * (s - xs[index]))
+        return (s > 0) * (s <= 1) * (ys[index] + ms[index] * (s - xs[index])) + (s > 1)
     return d
 
 
@@ -45,7 +45,7 @@ def get_mss(students, tests, pts_per_difficulty_fn, all_params):
 def xcoord_constraint_fn(students, tests, pts_per_difficulty_fn):
     def constraint(all_params):
         dxss = get_dxss(students, tests, pts_per_difficulty_fn, all_params)
-        return np.all(np.sum(dxss, 1) == 1) - 1
+        return np.max(np.sum(dxss, 1)) - 1
 
     return constraint
 
@@ -54,7 +54,7 @@ def ycoord_constraint_fn(students, tests, pts_per_difficulty_fn):
     def constraint(all_params):
         mss = get_mss(students, tests, pts_per_difficulty_fn, all_params)
         dxss = get_dxss(students, tests, pts_per_difficulty_fn, all_params)
-        return np.all(np.sum(mss * dxss, 1) == 1) - 1
+        return np.max(np.sum(mss * dxss, 1)) - 1
 
     return constraint
 
